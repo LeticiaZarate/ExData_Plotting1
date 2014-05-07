@@ -1,4 +1,4 @@
-# read header and get data rows
+# read header and get data rows. Data should be in a folder named "Project" in the working directory
 colsText <- readLines("./Project/household_power_consumption.txt", n=1)
 rowsData <- grep("^1/2/2007|^2/2/2007", readLines("./Project/household_power_consumption.txt", n=2075259))
 
@@ -11,33 +11,11 @@ names(electricConsumption) <- unlist(strsplit(colsText, ";", fixed=T))
 
 #clean up variables
 rm(colsText, rowsData)
-
 electricConsumption$Date <- as.Date(electricConsumption$Date, format="%d/%m/%Y")
 
-#plot1 - Global Active Power
-png(filename = "plot1.png", bg = "transparent")
-  hist(electricConsumption$Global_active_power, col="red", xlab="Global Active Power (kilowatts)", main="Global Active Power")
-dev.off()
-
-#plot2 - Global Active Power per week day
-png(filename = "plot2.png", bg = "transparent")
-  plot(electricConsumption$Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlab="", xaxt="n")
-  axis(1,c("Thu", "Fri", "Sat"), at=c(1, which(weekdays(electricConsumption$Date)=="Friday")[1], nrow(electricConsumption)+1))
-dev.off()
-
-#plot3 - Energy sub metering per week day
-png(filename = "plot3.png", bg = "transparent")
-  plot(electricConsumption$Sub_metering_1, type="n", ylab="Energy sub metering", xlab="", xaxt="n")
-  lines(electricConsumption$Sub_metering_1)
-  lines(electricConsumption$Sub_metering_2, col="red")
-  lines(electricConsumption$Sub_metering_3, col="blue")
-  axis(1,c("Thu", "Fri", "Sat"), at=c(1, which(weekdays(electricConsumption$Date)=="Friday")[1], nrow(electricConsumption)+1))
-  legend("topright", lty = 1, col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
-dev.off()
-
 #plot4 - set of graphs
-par(mfrow = c(2, 2))
-png(filename = "plot4.png", bg = "transparent")
+png(filename = "./Project/plot4.png", bg = "transparent")
+  par(mfrow = c(2, 2))
   plot(electricConsumption$Global_active_power, type="l", ylab="Global Active Power", xlab="", xaxt="n")
   axis(1,c("Thu", "Fri", "Sat"), at=c(1, which(weekdays(electricConsumption$Date)=="Friday")[1], nrow(electricConsumption)+1))
 
